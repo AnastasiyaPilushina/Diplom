@@ -15,6 +15,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     testImplementation 'mysql:mysql-connector-java:8.0.22'
     testImplementation 'org.postgresql:postgresql:42.2.20'
+    testImplementation 'commons-dbutils:commons-dbutils:1.7'
 
 }
 
