@@ -17,7 +17,7 @@ services:
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
       - MYSQL_DATABASE=app
-      - MYSQL_USER=user
+      - MYSQL_USER=app
       - MYSQL_PASSWORD=pass
 
   postgres:
@@ -26,5 +26,5 @@ services:
       - '5432:5432'
     environment:
       - POSTGRES_DB=app
-      - POSTGRES_USER=user
+      - POSTGRES_USER=app
       - POSTGRES_PASSWORD=pass
