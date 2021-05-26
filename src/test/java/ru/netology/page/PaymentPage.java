@@ -1,6 +1,5 @@
 package ru.netology.page;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import ru.netology.data.DataHelper;
@@ -40,9 +39,7 @@ public class PaymentPage {
         continueButton.click();
     }
 
-    public void shouldImproperFormatNotification() {
-        improperFormat.shouldBe(visible);
-    }
+    public void shouldImproperFormatNotification() { improperFormat.shouldBe(visible); }
 
     public void shouldEmptyFieldNotification() {
         emptyField.shouldBe(visible);

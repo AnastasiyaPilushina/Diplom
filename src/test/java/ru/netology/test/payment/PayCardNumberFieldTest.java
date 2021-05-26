@@ -22,8 +22,8 @@ public class PayCardNumberFieldTest {
 
     @Test
     public void shouldFailurePaymentIfEmptyCardNumber() {
-        val cardData = getInvalidCardNumberIfEmpty();
         mainPage.payWithCard();
+        val cardData = getInvalidCardNumberIfEmpty();
         paymentPage.fillCardData(cardData);
         paymentPage.shouldEmptyFieldNotification();
     }

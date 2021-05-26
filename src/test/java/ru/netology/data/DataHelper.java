@@ -85,14 +85,14 @@ public class DataHelper {
         return new CardData("4444 4444 4444 4441", "11", "24", "Иван Иванов", "324");
     }
 
-    public static CardData getInvalidCvvIfEmpty() {
+    public static CardData getInvalidCvcIfEmpty() {
         return new CardData("4444 4444 4444 4441", "11", "24", "Ivan Ivanov", "");
     }
-    public static CardData getInvalidCvvIfOneDigit() {
+    public static CardData getInvalidCvcIfOneDigit() {
         return new CardData("4444 4444 4444 4441", "11", "24", "Ivan Ivanov", "5");
     }
 
-    public static CardData getInvalidCvvIfTwoDigits() {
+    public static CardData getInvalidCvcIfTwoDigits() {
         return new CardData("4444 4444 4444 4441", "11", "24", "Ivan Ivanov", "25");
     }
     public static CardData getInvalidCvvIfThreeZero() {
