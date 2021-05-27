@@ -25,7 +25,6 @@ public class PayHappyPathTest {
 
     @BeforeEach
     void setUpForPayWithCard() {
-
         mainPage.payWithCard();
     }
 

@@ -20,12 +20,16 @@ public class PayCvcFieldTest {
 
     @BeforeEach
     void setUp() {
+
         open("http://localhost:8080/");
     }
+
     @BeforeEach
     void setUpForPayWithCard() {
+
         mainPage.payWithCard();
     }
+
     @Test
     public void shouldFailurePaymentIfEmptyCvc() {
         val cardData = getInvalidCvcIfEmpty();
@@ -54,9 +58,6 @@ public class PayCvcFieldTest {
         paymentPage.fillCardData(cardData);
         paymentPage.shouldImproperFormatNotification();
     }
-
-
-
 
 
 }
