@@ -37,4 +37,5 @@
 В новой вкладке терминала или нажав двойной Ctrl ввести команду:
 
 `gradlew clean test allureReport`
+
 `gradlew allureServe` 
