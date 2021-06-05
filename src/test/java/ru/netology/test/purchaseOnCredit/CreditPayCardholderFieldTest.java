@@ -1,6 +1,10 @@
 package ru.netology.test.purchaseOnCredit;
 
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
 import lombok.val;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.page.MainPage;
@@ -14,6 +18,16 @@ public class CreditPayCardholderFieldTest {
     MainPage mainPage = new MainPage();
     PaymentPage paymentPage = new PaymentPage();
 
+    @BeforeAll
+    static void setUpAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
+    }
+
     @BeforeEach
     void setUp() {
 
@@ -25,7 +39,7 @@ public class CreditPayCardholderFieldTest {
     @Test
     public void shouldFailurePaymentIfEmptyCardholderName() {
         mainPage.payWithCredit();
-        val cardData = getInvalidСardownerNameIfEmpty();
+        val cardData = getInvalidCardOwnerNameIfEmpty();
         paymentPage.fillCardData(cardData);
         paymentPage.shouldEmptyFieldNotification();
     }
@@ -33,7 +47,7 @@ public class CreditPayCardholderFieldTest {
     @Test
     public void shouldFailurePaymentIfNameNumeric() {
         mainPage.payWithCredit();
-        val cardData = getInvalidCardownerNameIfNumericAndSpecialCharacters();
+        val cardData = getInvalidCardOwnerNameIfNumericAndSpecialCharacters();
         paymentPage.fillCardData(cardData);
         paymentPage.shouldImproperFormatNotification();
     }
@@ -41,7 +55,7 @@ public class CreditPayCardholderFieldTest {
     @Test
     public void shouldFailurePaymentIfNameRussianLetters() {
         mainPage.payWithCredit();
-        val cardData = getInvalidСardownerNameIfRussianLetters();
+        val cardData = getInvalidCardOwnerNameIfRussianLetters();
         paymentPage.fillCardData(cardData);
         paymentPage.shouldImproperFormatNotification();
     }

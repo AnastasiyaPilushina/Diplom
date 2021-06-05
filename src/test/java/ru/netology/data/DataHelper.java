@@ -74,14 +74,14 @@ public class DataHelper {
     public static CardData getInvalidYearIfBeforeCurrentYear() {
         return new CardData("4444 4444 4444 4441", "11", "13", "Ivan Ivanov", "324");
     }
-    public static CardData getInvalidСardownerNameIfEmpty() {
+    public static CardData getInvalidCardOwnerNameIfEmpty() {
         return new CardData("4444 4444 4444 4441", "11", "24", "", "324");
     }
 
-    public static CardData getInvalidCardownerNameIfNumericAndSpecialCharacters() {
+    public static CardData getInvalidCardOwnerNameIfNumericAndSpecialCharacters() {
         return new CardData("4444 4444 4444 4441", "11", "24", "67893!№", "324");
     }
-    public static  CardData getInvalidСardownerNameIfRussianLetters() {
+    public static  CardData getInvalidCardOwnerNameIfRussianLetters() {
         return new CardData("4444 4444 4444 4441", "11", "24", "Иван Иванов", "324");
     }
 
