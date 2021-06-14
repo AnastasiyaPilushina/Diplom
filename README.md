@@ -42,4 +42,8 @@
 
 # Документация
 
-[План ]
+[План автоматизации тестирования веб-формы сервиса покупки туров интернет-банка](https://github.com/AnastasiyaPilushina/Diplom/blob/main/documents/Plan.md)
+
+[Отчет о проведенном тестировании](https://github.com/AnastasiyaPilushina/Diplom/blob/main/documents/Report.md)
+
+[Отчет по итогам автоматизации](https://github.com/AnastasiyaPilushina/Diplom/blob/main/documents/Summary.md)
