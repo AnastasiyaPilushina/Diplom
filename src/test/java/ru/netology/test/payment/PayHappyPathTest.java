@@ -1,64 +1,63 @@
 package ru.netology.test.payment;
 
-import com.codeborne.selenide.logevents.SelenideLogger;
-import io.qameta.allure.selenide.AllureSelenide;
 import lombok.val;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.netology.data.DbHelper;
 import ru.netology.page.MainPage;
 import ru.netology.page.PaymentPage;
+import ru.netology.test.TestBase;
 
-import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.netology.data.DataHelper.getApprovedCard;
 import static ru.netology.data.DataHelper.getDeclinedCard;
 import static ru.netology.data.DbHelper.*;
 
-public class PayHappyPathTest {
+public class PayHappyPathTest extends TestBase {
     MainPage mainPage = new MainPage();
     PaymentPage paymentPage = new PaymentPage();
 
-    @BeforeAll
-    static void setUpAll() {
-        SelenideLogger.addListener("allure", new AllureSelenide());
-    }
-
-    @AfterAll
-    static void tearDownAll() {
-        SelenideLogger.removeListener("allure");
-    }
-
     @BeforeEach
-    void setUp() {
-
-        open("http://localhost:8080/");
+    void setUpForPayWithCard() {
+        mainPage.payWithCard();
     }
 
 
 
     @Test
     public void shouldSuccessPayIfValidApprovedCards() {
-        mainPage.payWithCard();
         val cardData = getApprovedCard();
         paymentPage.fillCardData(cardData);
         paymentPage.shouldSuccessNotification();
 
-        assertEquals("APPROVED", new DbHelper().getPaymentStatus());
-        assertEquals(4500000, new DbHelper().getPaymentAmount());
-        assertNull(new DbHelper().getCreditId());
+        val expectedStatus = "APPROVED";
+        val actualStatus = getCardStatusForPayment();
+        assertEquals(expectedStatus, actualStatus);
+
+        val expectedAmount = "4500000";
+        val actualAmount = getAmountPayment();
+        assertEquals(expectedAmount, actualAmount);
+
+        val transactionIdExpected = getTransactionId();
+        val paymentIdActual = getPaymentIdForCardPay();
+        assertNotNull(transactionIdExpected);
+        assertNotNull(paymentIdActual);
+        assertEquals(transactionIdExpected, paymentIdActual);
     }
 
-        @Test
-        public void shouldFailurePayIfValidDeclinedCards () {
-            mainPage.payWithCard();
-            val cardData = getDeclinedCard();
-            paymentPage.fillCardData(cardData);
-            paymentPage.shouldFailureNotification();
+    @Test
+    public void shouldFailurePayIfValidDeclinedCards() {
+        val cardData = getDeclinedCard();
+        paymentPage.fillCardData(cardData);
+        paymentPage.shouldFailureNotification();
 
-            assertEquals("DECLINED", new DbHelper().getPaymentStatus());
-            assertNull(new DbHelper().getCreditId());
-        }
+        val expectedStatus = "DECLINED";
+        val actualStatus = getCardStatusForPayment();
+        assertEquals(expectedStatus, actualStatus);
+
+        val transactionIdExpected = getTransactionId();
+        val paymentIdActual = getPaymentIdForCardPay();
+        assertNotNull(transactionIdExpected);
+        assertNotNull(paymentIdActual);
+        assertEquals(transactionIdExpected, paymentIdActual);
     }
+}

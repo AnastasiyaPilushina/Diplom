@@ -1,61 +1,127 @@
 package ru.netology.data;
 
-import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.ScalarHandler;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import ru.netology.database.CreditRequestEntity;
+import ru.netology.database.OrderEntity;
+import ru.netology.database.PaymentEntity;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Properties;
+import java.sql.SQLException;
 
 public class DbHelper {
-    private final QueryRunner runner = new QueryRunner();
-    private Properties prop = prop();
-    private final Connection conn = getConnect();
+    private static final String url = System.getProperty("db.url");
+    private static final String user = System.getProperty("db.user");
+    private static final String password = System.getProperty("db.password");
+    private static Connection connection;
 
-
-    private Properties prop() {
-        Properties properties = new Properties();
-        try (InputStream is = DbHelper.class.getClassLoader().getResourceAsStream("application.properties")) {
-            properties.load(is);
-        } catch(IOException ex) { ex.printStackTrace(); }
-        return properties;
+    public static Connection getConnection() {
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return connection;
     }
 
+    public static void dropDataBase() {
+        val runner = new QueryRunner();
+        val order = "DELETE FROM app.order_entity";
+        val payment = "DELETE FROM app.payment_entity";
+        val creditRequest = "DELETE FROM app.credit_request_entity";
 
-    @SneakyThrows
-    private Connection getConnect() {
-        return DriverManager.getConnection(
-                prop.getProperty("spring.datasource.url"),
-                prop.getProperty("spring.datasource.username"),
-                prop.getProperty("spring.datasource.password")
-        );
+        try (val connection = getConnection()) {
+            runner.update(connection, order);
+            runner.update(connection, payment);
+            runner.update(connection, creditRequest);
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
     }
 
-    @SneakyThrows
-    public String getPaymentStatus() {
-        val status = "SELECT status FROM payment_entity ORDER BY created DESC";
-        return runner.query(conn, status, new ScalarHandler<>());
+    public static String getCardStatusForPayment() {
+        String statusQuery = "SELECT * FROM app.payment_entity";
+        val runner = new QueryRunner();
+        try (Connection connection = getConnection()) {
+            val cardStatus = runner.query(connection, statusQuery, new BeanHandler<>(PaymentEntity.class));
+            return cardStatus.getStatus();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return null;
     }
 
-    @SneakyThrows
-    public Integer getPaymentAmount() {
-        val amount = "SELECT amount FROM payment_entity ORDER BY created DESC";
-        return runner.query(conn, amount, new ScalarHandler<>());
+    public static String getCardStatusForCreditRequest() {
+        String statusQuery = "SELECT * FROM app.credit_request_entity";
+        val runner = new QueryRunner();
+        try (Connection connection = getConnection()) {
+            val cardStatus = runner.query(connection, statusQuery, new BeanHandler<>(CreditRequestEntity.class));
+            return cardStatus.getStatus();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return null;
     }
 
-    @SneakyThrows
-    public String getCreditRequestStatus() {
-        val status = "SELECT status FROM credit_request_entity ORDER BY created DESC";
-        return runner.query(conn, status, new ScalarHandler<>());
+    public static String getPaymentIdForCardPay() {
+        val idQueryForCardPay = "SELECT * FROM app.order_entity";
+        val runner = new QueryRunner();
+        try (val connection = getConnection()) {
+            val paymentId = runner.query(connection, idQueryForCardPay, new BeanHandler<>(OrderEntity.class));
+            return paymentId.getPayment_id();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    @SneakyThrows
-    public String getCreditId() {
-        val id = "SELECT credit_id FROM order_entity ORDER BY created DESC";
-        return runner.query(conn, id, new ScalarHandler<>());
+    public static String getPaymentIdForCreditRequest() {
+        val idQueryForCreditRequest = "SELECT * FROM app.order_entity";
+        val runner = new QueryRunner();
+        try (val connection = getConnection()) {
+            val paymentId = runner.query(connection, idQueryForCreditRequest, new BeanHandler<>(OrderEntity.class));
+            return paymentId.getPayment_id();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getTransactionId() {
+        val runner = new QueryRunner();
+        String idTransactionQuery = "SELECT * FROM app.payment_entity";
+        try (Connection connection = getConnection()) {
+            val transactionId = runner.query(connection, idTransactionQuery, new BeanHandler<>(PaymentEntity.class));
+            return transactionId.getTransaction_id();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getAmountPayment() {
+        val runner = new QueryRunner();
+        String amountQuery = "SELECT * FROM app.payment_entity";
+        try (Connection connection = getConnection()) {
+            val transactionId = runner.query(connection, amountQuery, new BeanHandler<>(PaymentEntity.class));
+            return transactionId.getAmount();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getBankId() {
+        String bankIdQuery = "SELECT * FROM app.credit_request_entity";
+        val runner = new QueryRunner();
+        try (Connection connection = getConnection()) {
+            val bankId = runner.query(connection, bankIdQuery, new BeanHandler<>(CreditRequestEntity.class));
+            return bankId.getBank_id();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return null;
     }
 }
